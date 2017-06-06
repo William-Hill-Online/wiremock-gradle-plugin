@@ -1,4 +1,4 @@
-package com.github.william_hill_online.cassandra
+package com.github.william_hill_online.wiremock
 
 import spock.lang.Specification
 
