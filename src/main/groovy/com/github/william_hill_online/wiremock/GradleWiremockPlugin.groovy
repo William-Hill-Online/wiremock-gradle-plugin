@@ -8,14 +8,10 @@ import org.gradle.api.Task
 class GradleWiremockPlugin implements Plugin<Project> {
 
     static final String PLUGIN_EXTENSION_NAME = 'wiremock'
-    static final String TASK_GROUP_NAME = 'Wiremock'
 
     @Override
     void apply(final Project project) {
         configureTaskProperties(project)
-        addStartWiremockTask(project)
-        addStopWiremockTask(project)
-
         extendAllTasksWithCassandraOptions(project)
 
         project.afterEvaluate {
@@ -25,18 +21,6 @@ class GradleWiremockPlugin implements Plugin<Project> {
 
     private static void configureTaskProperties(Project project) {
         project.extensions.create(PLUGIN_EXTENSION_NAME, GradleWiremockPluginExtension)
-    }
-
-    private static void addStartWiremockTask(Project project) {
-        project.task(group: TASK_GROUP_NAME, description: 'Start a Wiremock instance', 'startWiremock').doFirst {
-            startWiremockFromProject(project)
-        }
-    }
-
-    private static void addStopWiremockTask(Project project) {
-        project.task(group: TASK_GROUP_NAME, description: 'Stop a Wiremock instance', 'stopWiremock').doFirst {
-//            stopWiremock()
-        }
     }
 
     def static startWiremockFromProject(final Project project) {
