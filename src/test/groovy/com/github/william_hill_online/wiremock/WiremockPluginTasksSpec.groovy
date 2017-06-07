@@ -34,17 +34,21 @@ class WiremockPluginTasksSpec extends Specification {
                         dir "test/mappings"
                         params "port 9090"
                     }
+                    
+                    task integrationTests() {
+                        runWithWiremock = true
+                    }
                     """
 
         when:
         def result = GradleRunner.create()
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
-                .withArguments("startWiremock")
+                .withArguments("integrationTests")
                 .build()
 
         then:
         result.getOutput().contains("Starting WireMock with following params: --root-dir=test/mappings port 9090")
-        result.task(":startWiremock").getOutcome() == TaskOutcome.SUCCESS
+        result.task(":integrationTests").getOutcome() == TaskOutcome.SUCCESS
     }
 }

@@ -12,15 +12,16 @@ class GradleWiremockPlugin implements Plugin<Project> {
     @Override
     void apply(final Project project) {
         configureTaskProperties(project)
-        extendAllTasksWithCassandraOptions(project)
 
         project.afterEvaluate {
-            configureTasksRequiringCassandra(project)
+            configureTasksRequiringWiremock(project)
         }
     }
 
     private static void configureTaskProperties(Project project) {
         project.extensions.create(PLUGIN_EXTENSION_NAME, GradleWiremockPluginExtension)
+        project.tasks.each { extend(it) }
+        project.tasks.whenTaskAdded { extend(it) }
     }
 
     def static startWiremockFromProject(final Project project) {
@@ -31,26 +32,15 @@ class GradleWiremockPlugin implements Plugin<Project> {
         WireMockServerRunner.main(params)
     }
 
-    private static void extendAllTasksWithCassandraOptions(Project project) {
-        project.tasks.each {
-            extend(it)
-        }
-
-        project.tasks.whenTaskAdded {
-            extend(it)
-        }
-    }
-
     private static void extend(Task task) {
         task.ext.runWithWiremock = false
         task.extensions.add(PLUGIN_EXTENSION_NAME, GradleWiremockPluginExtension)
     }
 
-    private static Iterable<Task> configureTasksRequiringCassandra(Project project) {
+    private static Iterable<Task> configureTasksRequiringWiremock(Project project) {
         project.tasks.each {
-            def task = it
-            if (task.runWithWiremock) {
-                task.doFirst {
+            if (it.runWithWiremock) {
+                it.doFirst {
                     startWiremockFromProject(project)
                 }
             }
