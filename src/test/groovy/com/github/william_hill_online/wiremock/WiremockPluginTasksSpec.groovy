@@ -32,7 +32,7 @@ class WiremockPluginTasksSpec extends Specification {
                     
                     wiremock {
                         dir "test/mappings"
-                        params "port 9090"
+                        params "--port=9090"
                     }
                     
                     task integrationTests() {
@@ -48,7 +48,7 @@ class WiremockPluginTasksSpec extends Specification {
                 .build()
 
         then:
-        result.getOutput().contains("Starting WireMock with following params: --root-dir=test/mappings port 9090")
+        result.getOutput().contains("Starting WireMock with following params: --root-dir=test/mappings --port=9090")
         result.task(":integrationTests").getOutcome() == TaskOutcome.SUCCESS
     }
 }

@@ -27,8 +27,7 @@ class GradleWiremockPlugin implements Plugin<Project> {
     def static startWiremockFromProject(final Project project) {
         def pluginExt = project[PLUGIN_EXTENSION_NAME] as GradleWiremockPluginExtension
         def params = pluginExt.getAllParams()
-        String wireMockParams = Arrays.toString(params).replaceAll("[\\[\\]]", "").replaceAll(", ", " ")
-        println("Starting WireMock with following params: $wireMockParams")
+        println("Starting WireMock with following params: $params")
         WireMockServerRunner.main(params)
     }
 
