@@ -39,11 +39,9 @@ Configure your WireMock instance inside a ```wiremock``` block:
 wiremock {
     dir "src/test/resources/mappings/"
     params "--port=8081"
-    ...
 }
 ```
 
 The `wireMock` configuration block can be declared at either the project or the task level. Task-level configuration inherits from any project-level configuration provided.
 
 See WireMock [manual](http://wiremock.org/docs/running-standalone/) for detailed information on available command line options.
-```
