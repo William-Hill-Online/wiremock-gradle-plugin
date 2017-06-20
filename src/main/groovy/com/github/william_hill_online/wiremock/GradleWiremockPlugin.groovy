@@ -8,6 +8,7 @@ import org.gradle.api.Task
 class GradleWiremockPlugin implements Plugin<Project> {
 
     static final String PLUGIN_EXTENSION_NAME = 'wiremock'
+    static private WireMockServerRunner serverRunner
 
     @Override
     void apply(final Project project) {
@@ -28,7 +29,8 @@ class GradleWiremockPlugin implements Plugin<Project> {
         def pluginExt = project[PLUGIN_EXTENSION_NAME] as GradleWiremockPluginExtension
         def params = pluginExt.getAllParams()
         println("Starting WireMock with following params: $params")
-        WireMockServerRunner.main(params)
+        serverRunner = new WireMockServerRunner()
+        serverRunner.main(params)
     }
 
     private static void extend(Task task) {
@@ -42,7 +44,14 @@ class GradleWiremockPlugin implements Plugin<Project> {
                 it.doFirst {
                     startWiremockFromProject(project)
                 }
+                it.doLast {
+                    stopWiremock()
+                }
             }
         }
+    }
+
+    static def stopWiremock() {
+        serverRunner.stop()
     }
 }
