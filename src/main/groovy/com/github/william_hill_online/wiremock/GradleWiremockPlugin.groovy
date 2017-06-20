@@ -30,7 +30,7 @@ class GradleWiremockPlugin implements Plugin<Project> {
         def params = pluginExt.getAllParams()
         println("Starting WireMock with following params: $params")
         serverRunner = new WireMockServerRunner()
-        serverRunner.main(params)
+        serverRunner.run(params)
     }
 
     private static void extend(Task task) {
