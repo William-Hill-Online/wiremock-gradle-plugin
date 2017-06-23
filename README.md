@@ -1,3 +1,4 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.william-hill-online/wiremock-gradle-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.william-hill-online/wiremock-gradle-plugin)
 ## Gradle Wiremock Plugin ##
 
 Ultra-lightweight, super-simple WireMock Maven Plugin. It is based on the [WireMock](http://wiremock.org/docs/running-standalone/).
