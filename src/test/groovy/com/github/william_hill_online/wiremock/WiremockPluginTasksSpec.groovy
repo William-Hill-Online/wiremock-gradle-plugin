@@ -24,7 +24,7 @@ class WiremockPluginTasksSpec extends Specification {
                             jcenter()
                         }
                         dependencies {
-                            classpath "com.github.william_hill_online:wiremock-gradle-plugin:0.1"
+                            classpath "com.github.william_hill_online:wiremock-gradle-plugin:0.4.1"
                         }
                     }
                     
@@ -48,7 +48,7 @@ class WiremockPluginTasksSpec extends Specification {
                 .build()
 
         then:
-        result.getOutput().contains("Starting WireMock with following params: --root-dir=test/mappings --port=9090")
+        result.getOutput().contains("Starting WireMock with following params: [--root-dir=test/mappings, --port=9090]")
         result.task(":integrationTests").getOutcome() == TaskOutcome.SUCCESS
     }
 }
