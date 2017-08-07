@@ -32,6 +32,20 @@ dependencies {
     }
 }
 
+task createPluginClasspath {
+    def outputDir = file("${buildDir}/resources/test")
+
+    inputs.files sourceSets.test.runtimeClasspath
+    outputs.dir outputDir
+
+    doLast {
+        outputDir.mkdirs()
+        file("${outputDir}/plugin-classpath.txt").text = sourceSets.test.runtimeClasspath.join('\n',)
+    }
+}
+
+test.dependsOn createPluginClasspath
+
 pluginBundle {
   website = POM_URL
   vcsUrl = POM_URL

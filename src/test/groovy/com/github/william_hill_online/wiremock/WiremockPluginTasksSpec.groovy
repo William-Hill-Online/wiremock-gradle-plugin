@@ -10,25 +10,20 @@ class WiremockPluginTasksSpec extends Specification {
 
     @Rule final TemporaryFolder testProjectDir = new TemporaryFolder()
     File buildFile
+    List pluginClasspath
 
     def setup() throws IOException {
         buildFile = testProjectDir.newFile("build.gradle")
+        def resource = getClass().classLoader.getResource('plugin-classpath.txt')
+        pluginClasspath = resource.readLines().collect { new File(it) }
     }
 
     def 'startWiremock task should start a wiremock instance'() {
         given:
         buildFile << """
-                    buildscript {
-                        repositories {
-                            mavenLocal()
-                            jcenter()
-                        }
-                        dependencies {
-                            classpath "com.github.william_hill_online:wiremock-gradle-plugin:0.4.1"
-                        }
+                    plugins {
+                        id 'com.williamhill.wiremock'
                     }
-                    
-                    apply plugin: com.github.william_hill_online.wiremock.GradleWiremockPlugin
                     
                     wiremock {
                         dir "test/mappings"
@@ -42,9 +37,9 @@ class WiremockPluginTasksSpec extends Specification {
 
         when:
         def result = GradleRunner.create()
-                .withDebug(true)
                 .withProjectDir(testProjectDir.root)
                 .withArguments("integrationTests")
+                .withPluginClasspath(pluginClasspath)
                 .build()
 
         then:
