@@ -5,8 +5,9 @@ class GradleWiremockPluginExtension {
     public static final String DEFAULT_DIR = "target/classes"
     def dir = DEFAULT_DIR
     def params
+    def wiremockInstance
 
-    protected String[] getAllParams() {
+    public String[] getAllParams() {
         if (params == null || params.isEmpty()) {
             return ["--root-dir=$dir"]
         }

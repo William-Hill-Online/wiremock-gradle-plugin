@@ -1,19 +1,22 @@
 package com.github.william_hill_online.wiremock
 
-import com.github.tomakehurst.wiremock.standalone.WireMockServerRunner
+import com.github.william_hill_online.wiremock.tasks.WiremockStartTask
+import com.github.william_hill_online.wiremock.tasks.WiremockStopTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 
 class GradleWiremockPlugin implements Plugin<Project> {
 
-    static final String PLUGIN_EXTENSION_NAME = 'wiremock'
-    static private WireMockServerRunner serverRunner
+    public static final String PLUGIN_EXTENSION_NAME = 'wiremock'
+    static final String TASK_GROUP_NAME = 'wiremock'
 
     @Override
     void apply(final Project project) {
         configureTaskProperties(project)
 
+        project.task('startWiremock', group: TASK_GROUP_NAME, description: 'Start a wiremock instance', type: WiremockStartTask)
+        project.task('stopWiremock', group: TASK_GROUP_NAME, description: 'Stop a wiremock instance', type: WiremockStopTask)
         project.afterEvaluate {
             configureTasksRequiringWiremock(project)
         }
@@ -25,14 +28,6 @@ class GradleWiremockPlugin implements Plugin<Project> {
         project.tasks.whenTaskAdded { extend(it) }
     }
 
-    def static startWiremockFromProject(final Project project) {
-        def pluginExt = project[PLUGIN_EXTENSION_NAME] as GradleWiremockPluginExtension
-        def params = pluginExt.getAllParams()
-        println("Starting WireMock with following params: $params")
-        serverRunner = new WireMockServerRunner()
-        serverRunner.run(params)
-    }
-
     private static void extend(Task task) {
         task.ext.runWithWiremock = false
         task.extensions.add(PLUGIN_EXTENSION_NAME, GradleWiremockPluginExtension)
@@ -41,17 +36,9 @@ class GradleWiremockPlugin implements Plugin<Project> {
     private static Iterable<Task> configureTasksRequiringWiremock(Project project) {
         project.tasks.each {
             if (it.runWithWiremock) {
-                it.doFirst {
-                    startWiremockFromProject(project)
-                }
-                it.doLast {
-                    stopWiremock()
-                }
+                it.dependsOn 'startWiremock'
+                it.finalizedBy 'stopWiremock'
             }
         }
-    }
-
-    static def stopWiremock() {
-        serverRunner.stop()
     }
 }
