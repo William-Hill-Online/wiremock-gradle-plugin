@@ -5,8 +5,6 @@ plugins {
     id "com.gradle.plugin-publish" version "0.9.10"
 }
 
-apply plugin: 'signing'
-
 repositories {
     mavenLocal()
     jcenter()
@@ -53,11 +51,6 @@ def getRepositoryUsername() {
 
 def getRepositoryPassword() {
     return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
-}
-
-signing {
-    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
 }
 
 task javadocJar(type: Jar) {
